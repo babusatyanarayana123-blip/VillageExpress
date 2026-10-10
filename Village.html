@@ -1,1 +1,730 @@
-Village delivery 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#15803d">
+<title>VillageExpress | Mee Ooru, Mee Shopping!</title>
+
+<style>
+:root {
+  --green:#15803d;
+  --dark:#14532d;
+  --light:#dcfce7;
+  --orange:#f97316;
+  --bg:#f6f8f6;
+  --white:#fff;
+  --text:#17251b;
+  --muted:#647067;
+  --border:#e0e7e1;
+}
+*{box-sizing:border-box}
+body{
+  margin:0;font-family:Arial,Helvetica,sans-serif;
+  background:var(--bg);color:var(--text);
+}
+button,input,select{font:inherit}
+button{cursor:pointer}
+header{
+  background:var(--green);color:white;
+  padding:15px 4%;position:sticky;top:0;z-index:20;
+  box-shadow:0 3px 12px #0002;
+}
+.topbar{
+  display:flex;align-items:center;justify-content:space-between;
+  gap:12px;max-width:1200px;margin:auto;
+}
+.brand{font-size:24px;font-weight:900;letter-spacing:-.7px}
+.brand span{color:#fde68a}
+.tagline{font-size:12px;margin-top:4px}
+.header-actions{display:flex;gap:8px}
+.header-actions button{
+  background:white;color:var(--green);border:0;border-radius:10px;
+  padding:10px 12px;font-weight:bold;
+}
+main{max-width:1200px;margin:auto;padding:18px 4% 100px}
+.hero{
+  border-radius:20px;padding:27px 22px;margin-bottom:18px;
+  background:linear-gradient(130deg,#14532d,#16a34a);
+  color:white;position:relative;overflow:hidden;
+}
+.hero h1{font-size:clamp(26px,6vw,42px);margin:0 0 10px}
+.hero p{line-height:1.6;margin:0;max-width:560px}
+.hero .hero-truck{
+  position:absolute;right:20px;bottom:10px;font-size:65px;
+  animation:drive 3s ease-in-out infinite;
+}
+@keyframes drive{
+  0%,100%{transform:translateX(0)}
+  50%{transform:translateX(-18px)}
+}
+.delivery-note{
+  margin-top:17px;display:inline-block;background:#ffffff20;
+  padding:8px 12px;border-radius:9px;font-size:13px;
+}
+.searchbar{display:flex;gap:8px;margin:18px 0}
+.searchbar input{
+  width:100%;padding:14px;border:1px solid var(--border);
+  border-radius:12px;background:white;outline-color:var(--green);
+}
+.section-title{
+  display:flex;align-items:center;justify-content:space-between;
+  gap:10px;margin:24px 0 13px;
+}
+.section-title h2{font-size:20px;margin:0}
+.muted{color:var(--muted);font-size:13px}
+.village-row{
+  display:flex;gap:8px;overflow-x:auto;padding-bottom:8px;
+}
+.village-chip{
+  border:1px solid var(--border);background:white;border-radius:22px;
+  padding:10px 14px;white-space:nowrap;
+}
+.village-chip.active{background:var(--green);color:white;border-color:var(--green)}
+.categories{
+  display:flex;gap:9px;overflow-x:auto;padding:3px 0 10px;
+}
+.category{
+  min-width:88px;border:1px solid var(--border);background:white;
+  border-radius:13px;padding:12px 8px;text-align:center;
+}
+.category .icon{font-size:25px;display:block;margin-bottom:7px}
+.category small{font-size:12px}
+.category.active{background:var(--light);border-color:var(--green)}
+.products{
+  display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;
+}
+.product{
+  background:white;border:1px solid var(--border);
+  border-radius:15px;overflow:hidden;min-width:0;
+  box-shadow:0 2px 5px #00000005;
+}
+.product-photo{
+  height:135px;position:relative;background:#edf5ed;
+}
+.product-photo img{width:100%;height:100%;object-fit:cover;display:block}
+.product-photo .fallback{
+  display:none;width:100%;height:100%;align-items:center;
+  justify-content:center;font-size:54px;
+}
+.product-info{padding:11px}
+.product-name{font-size:14px;font-weight:bold;line-height:1.35;min-height:36px}
+.product-unit{font-size:12px;color:var(--muted);margin:5px 0 10px}
+.product-bottom{display:flex;align-items:center;justify-content:space-between;gap:5px}
+.price{font-weight:800;color:var(--dark);font-size:16px}
+.add-btn{
+  background:var(--green);color:white;border:0;border-radius:9px;
+  padding:9px 12px;font-weight:bold;
+}
+.add-btn:disabled{background:#9ca3af}
+.empty{
+  grid-column:1/-1;background:white;padding:25px;border-radius:12px;
+  text-align:center;color:var(--muted);
+}
+.notice{
+  background:#fff7ed;border:1px solid #fed7aa;padding:12px;
+  border-radius:12px;font-size:13px;line-height:1.5;
+}
+.bottom-cart{
+  position:fixed;bottom:12px;left:4%;right:4%;z-index:30;
+  max-width:700px;margin:auto;background:var(--dark);color:white;
+  padding:13px 16px;border-radius:15px;display:flex;
+  align-items:center;justify-content:space-between;gap:10px;
+  box-shadow:0 4px 20px #0003;
+}
+.bottom-cart button{
+  background:#fde68a;color:#14532d;border:0;
+  border-radius:9px;padding:11px 15px;font-weight:bold;
+}
+.overlay{
+  position:fixed;inset:0;background:#0008;z-index:50;
+  display:none;align-items:flex-end;justify-content:center;
+}
+.overlay.show{display:flex}
+.modal{
+  width:100%;max-width:650px;max-height:90vh;overflow:auto;
+  background:white;border-radius:20px 20px 0 0;padding:20px;
+}
+.modal-head{display:flex;justify-content:space-between;align-items:center;gap:10px}
+.modal-head h2{margin:0;font-size:21px}
+.close-btn{
+  border:0;background:#eee;border-radius:9px;padding:8px 12px;
+}
+.cart-line{
+  display:flex;justify-content:space-between;align-items:center;
+  gap:10px;border-bottom:1px solid var(--border);padding:12px 0;
+}
+.qty{display:flex;align-items:center;gap:10px}
+.qty button{
+  width:30px;height:30px;border:0;background:var(--light);
+  color:var(--dark);border-radius:7px;font-weight:bold;
+}
+.field{margin:12px 0}
+.field label{display:block;font-size:13px;font-weight:bold;margin-bottom:6px}
+.field input,.field select,.field textarea{
+  width:100%;padding:12px;border:1px solid #cbd5ce;
+  border-radius:9px;background:white;
+}
+.primary{
+  width:100%;padding:13px;border:0;border-radius:10px;
+  background:var(--green);color:white;font-weight:bold;margin-top:10px;
+}
+.secondary{
+  padding:10px;border:1px solid var(--border);background:white;
+  border-radius:8px;
+}
+footer{text-align:center;color:var(--muted);font-size:12px;padding:25px 10px}
+.admin-box{margin-top:28px;background:white;border:1px solid var(--border);padding:15px;border-radius:14px}
+.admin-box h2{margin-top:0}
+.admin-list{font-size:13px;line-height:1.7;overflow-wrap:anywhere}
+.admin-actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+.admin-actions button{padding:10px;border:1px solid var(--border);background:white;border-radius:8px}
+#introScreen{
+  position:fixed;inset:0;z-index:1000;display:flex;
+  align-items:center;justify-content:center;text-align:center;
+  color:white;background:linear-gradient(145deg,#14532d,#15803d,#22c55e);
+  transition:opacity .7s,visibility .7s;
+}
+#introScreen.hide{opacity:0;visibility:hidden;pointer-events:none}
+.intro-content{padding:20px;animation:appear 1s ease}
+.intro-house{font-size:72px;animation:float 2s infinite}
+.intro-content h1{font-size:clamp(32px,8vw,45px);margin:12px 0}
+.intro-content h1 span{color:#fde68a}
+.intro-road{font-size:40px;margin-top:25px;animation:drive 1.7s infinite}
+.intro-line{height:4px;max-width:260px;margin:8px auto;background:repeating-linear-gradient(90deg,#fde68a 0 18px,transparent 18px 30px)}
+@keyframes appear{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+@keyframes float{50%{transform:translateY(-8px)}}
+@media(min-width:600px){
+  .products{grid-template-columns:repeat(3,minmax(0,1fr))}
+  .product-photo{height:175px}
+}
+@media(min-width:900px){
+  .products{grid-template-columns:repeat(4,minmax(0,1fr))}
+}
+@media(prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation:none!important;transition:none!important}
+}
+</style>
+</head>
+
+<body>
+
+<!-- Welcome animation -->
+<div id="introScreen">
+  <div class="intro-content">
+    <div class="intro-house">🏡</div>
+    <h1>Village<span>Express</span></h1>
+    <p>Mee Ooru, Mee Shopping!</p>
+    <div class="intro-road">🚚</div>
+    <div class="intro-line"></div>
+    <p>Delivering happiness to your village...</p>
+  </div>
+</div>
+
+<header>
+  <div class="topbar">
+    <div>
+      <div class="brand">🏡 Village<span>Express</span></div>
+      <div class="tagline">Mee Ooru, Mee Shopping!</div>
+    </div>
+    <div class="header-actions">
+      <button onclick="openCart()">🛒 <span id="headCount">0</span></button>
+    </div>
+  </div>
+</header>
+
+<main>
+  <section class="hero">
+    <h1>Your Village. Your Shopping.</h1>
+    <p>Groceries, vegetables, fruits and daily essentials — order from your phone and get them delivered in your village.</p>
+    <div class="delivery-note">🚚 Serving selected villages in East Godavari</div>
+    <div class="hero-truck">🚚</div>
+  </section>
+
+  <div class="notice">
+    <strong>Welcome!</strong> This is our first website version.
+    Product availability and delivery arrangements must be confirmed with the seller.
+  </div>
+
+  <div class="section-title"><h2>📍 Select your village</h2></div>
+  <div class="village-row" id="villageRow"></div>
+
+  <div class="searchbar">
+    <input id="searchInput" placeholder="🔍 Search rice, milk, vegetables..." oninput="renderProducts()">
+  </div>
+
+  <div class="section-title">
+    <h2>🛍️ Shop by category</h2>
+    <span class="muted" id="productCount"></span>
+  </div>
+  <div class="categories" id="categoryRow"></div>
+
+  <div class="section-title"><h2>⭐ Products</h2></div>
+  <div class="products" id="productGrid"></div>
+
+  <section class="admin-box" id="adminSection">
+    <h2>🔐 Shop Admin (Demo)</h2>
+    <p class="muted">For testing only. This demo does not provide secure authentication.</p>
+    <div class="field">
+      <label>Demo password</label>
+      <input id="adminPassword" type="password" placeholder="Enter demo password">
+    </div>
+    <button class="primary" onclick="adminLogin()">Open demo admin</button>
+    <div id="adminPanel" hidden>
+      <h3>Order records on this device</h3>
+      <div id="adminOrders" class="admin-list"></div>
+      <div class="admin-actions">
+        <button onclick="exportOrders()">Export order records</button>
+        <button onclick="adminLogout()">Close admin</button>
+      </div>
+      <p class="muted">Records saved in this browser are not shared with other devices.</p>
+    </div>
+  </section>
+
+  <footer>
+    <strong>VillageExpress</strong><br>
+    Mee Ooru, Mee Shopping!<br>
+    Seethanagaram · Lankuru · Kondepudi · Raghudevapuram · Vangalapudi
+  </footer>
+</main>
+
+<div class="bottom-cart">
+  <div><strong>🛒 <span id="cartCount">0</span> items</strong><br><small id="cartTotal">₹0.00</small></div>
+  <button onclick="openCart()">View Cart →</button>
+</div>
+
+<!-- Cart and checkout modal -->
+<div class="overlay" id="cartOverlay" onclick="outsideClose(event)">
+  <div class="modal">
+    <div class="modal-head">
+      <h2>🛒 Your Cart</h2>
+      <button class="close-btn" onclick="closeCart()">✕</button>
+    </div>
+    <div id="cartItems"></div>
+    <div class="section-title"><h2>Checkout details</h2></div>
+    <div class="field">
+      <label>Your name</label>
+      <input id="customerName" placeholder="Enter your name">
+    </div>
+    <div class="field">
+      <label>Mobile number</label>
+      <input id="customerPhone" inputmode="tel" placeholder="Your phone number">
+    </div>
+    <div class="field">
+      <label>Village</label>
+      <select id="checkoutVillage"></select>
+    </div>
+    <div class="field">
+      <label>Full delivery address</label>
+      <textarea id="customerAddress" rows="3" placeholder="House number, street, landmark"></textarea>
+    </div>
+    <div class="field">
+      <label>Payment method</label>
+      <select id="paymentMethod">
+        <option>Cash on delivery (confirm with seller)</option>
+        <option>UPI (arrange payment directly with seller)</option>
+      </select>
+    </div>
+    <div class="notice">
+      Your order is sent to the seller through WhatsApp. A message opening on WhatsApp does not itself confirm that the seller has accepted the order.
+    </div>
+    <button class="primary" onclick="placeOrder()">📲 Send order on WhatsApp</button>
+    <button class="secondary" style="width:100%;margin-top:8px" onclick="closeCart()">Continue shopping</button>
+  </div>
+</div>
+
+<script>
+/* ==================================================
+   VILLAGEEXPRESS SETTINGS
+   Replace the placeholder with your WhatsApp number.
+   India example format: 919876543210 (no + or spaces).
+   ================================================== */
+const WHATSAPP_NUMBER = "91XXXXXXXXXX";
+const DEMO_ADMIN_PASSWORD = "change-me-123";
+
+const villages = [
+  "Seethanagaram",
+  "Lankuru",
+  "Kondepudi",
+  "Raghudevapuram",
+  "Vangalapudi"
+];
+
+const categories = [
+  {name:"All",icon:"🛍️"},
+  {name:"Groceries",icon:"🌾"},
+  {name:"Vegetables",icon:"🥦"},
+  {name:"Fruits",icon:"🍎"},
+  {name:"Dairy & Eggs",icon:"🥛"},
+  {name:"Snacks",icon:"🍪"},
+  {name:"Personal Care",icon:"🧴"},
+  {name:"Household",icon:"🧹"},
+  {name:"Stationery",icon:"📚"},
+  {name:"Drinks",icon:"🥤"}
+];
+
+const photo = {
+  rice:"https://images.unsplash.com/photo-1586201375761-83865001e31c?auto=format&fit=crop&w=600&q=80",
+  flour:"https://images.unsplash.com/photo-1627485937980-221c88ac04f9?auto=format&fit=crop&w=600&q=80",
+  dal:"https://images.unsplash.com/photo-1515543904379-3d757afe72e4?auto=format&fit=crop&w=600&q=80",
+  sugar:"https://images.unsplash.com/photo-1581441363689-1f3c3c414635?auto=format&fit=crop&w=600&q=80",
+  oil:"https://images.unsplash.com/photo-1474979266404-7eaacbcd87c5?auto=format&fit=crop&w=600&q=80",
+  milk:"https://images.unsplash.com/photo-1563636619-e9143da7973b?auto=format&fit=crop&w=600&q=80",
+  curd:"https://images.unsplash.com/photo-1488477181946-6428a0291777?auto=format&fit=crop&w=600&q=80",
+  eggs:"https://images.unsplash.com/photo-1506976785307-8732e854ad03?auto=format&fit=crop&w=600&q=80",
+  bread:"https://images.unsplash.com/photo-1509440159596-0249088772ff?auto=format&fit=crop&w=600&q=80",
+  biscuits:"https://images.unsplash.com/photo-1499636136210-6f4ee915583e?auto=format&fit=crop&w=600&q=80",
+  banana:"https://images.unsplash.com/photo-1571771894821-ce9b6c11b08e?auto=format&fit=crop&w=600&q=80",
+  apple:"https://images.unsplash.com/photo-1560806887-1e4cd0b6cbd6?auto=format&fit=crop&w=600&q=80",
+  tomato:"https://images.unsplash.com/photo-1546094096-0df4bcaaa337?auto=format&fit=crop&w=600&q=80",
+  potato:"https://images.unsplash.com/photo-1518977676601-b53f82aba655?auto=format&fit=crop&w=600&q=80",
+  onion:"https://images.unsplash.com/photo-1508747703725-719777637510?auto=format&fit=crop&w=600&q=80",
+  soap:"https://images.unsplash.com/photo-1600857544200-b2f4c5b8e8d2?auto=format&fit=crop&w=600&q=80",
+  shampoo:"https://images.unsplash.com/photo-1608248543803-ba4f8c70ae0b?auto=format&fit=crop&w=600&q=80",
+  notebook:"https://images.unsplash.com/photo-1531346878377-a5be20888e57?auto=format&fit=crop&w=600&q=80",
+  water:"https://images.unsplash.com/photo-1602143407151-7111542de6e8?auto=format&fit=crop&w=600&q=80",
+  chips:"https://images.unsplash.com/photo-1566478989037-eec170784d0b?auto=format&fit=crop&w=600&q=80"
+};
+
+const products = [
+  {id:1,name:"Rice",unit:"1 kg",price:55,cat:"Groceries",emoji:"🍚",img:photo.rice},
+  {id:2,name:"Premium Rice",unit:"5 kg",price:275,cat:"Groceries",emoji:"🍚",img:photo.rice},
+  {id:3,name:"Wheat Flour",unit:"1 kg",price:45,cat:"Groceries",emoji:"🌾",img:photo.flour},
+  {id:4,name:"Toor Dal",unit:"1 kg",price:150,cat:"Groceries",emoji:"🫘",img:photo.dal},
+  {id:5,name:"Moong Dal",unit:"1 kg",price:130,cat:"Groceries",emoji:"🫘",img:photo.dal},
+  {id:6,name:"Chana Dal",unit:"1 kg",price:95,cat:"Groceries",emoji:"🫘",img:photo.dal},
+  {id:7,name:"Sugar",unit:"1 kg",price:48,cat:"Groceries",emoji:"🍚",img:photo.sugar},
+  {id:8,name:"Cooking Oil",unit:"1 litre",price:145,cat:"Groceries",emoji:"🫗",img:photo.oil},
+  {id:9,name:"Salt",unit:"1 kg",price:25,cat:"Groceries",emoji:"🧂"},
+  {id:10,name:"Tea Powder",unit:"250 g",price:100,cat:"Groceries",emoji:"🍵"},
+  {id:11,name:"Coffee Powder",unit:"100 g",price:80,cat:"Groceries",emoji:"☕"},
+  {id:12,name:"Red Chilli Powder",unit:"200 g",price:65,cat:"Groceries",emoji:"🌶️"},
+  {id:13,name:"Turmeric Powder",unit:"100 g",price:30,cat:"Groceries",emoji:"🟡"},
+  {id:14,name:"Garam Masala",unit:"100 g",price:55,cat:"Groceries",emoji:"🧂"},
+  {id:15,name:"Jeera",unit:"100 g",price:45,cat:"Groceries",emoji:"🌿"},
+  {id:16,name:"Mustard Seeds",unit:"100 g",price:25,cat:"Groceries",emoji:"🌱"},
+  {id:17,name:"Poha",unit:"500 g",price:40,cat:"Groceries",emoji:"🍚"},
+  {id:18,name:"Rava",unit:"500 g",price:35,cat:"Groceries",emoji:"🌾"},
+  {id:19,name:"Besan",unit:"500 g",price:55,cat:"Groceries",emoji:"🌾"},
+  {id:20,name:"Jaggery",unit:"500 g",price:45,cat:"Groceries",emoji:"🟤"},
+
+  {id:21,name:"Tomatoes",unit:"1 kg",price:35,cat:"Vegetables",emoji:"🍅",img:photo.tomato},
+  {id:22,name:"Potatoes",unit:"1 kg",price:35,cat:"Vegetables",emoji:"🥔",img:photo.potato},
+  {id:23,name:"Onions",unit:"1 kg",price:40,cat:"Vegetables",emoji:"🧅",img:photo.onion},
+  {id:24,name:"Green Chillies",unit:"250 g",price:20,cat:"Vegetables",emoji:"🌶️"},
+  {id:25,name:"Carrots",unit:"500 g",price:35,cat:"Vegetables",emoji:"🥕"},
+  {id:26,name:"Cabbage",unit:"1 piece",price:30,cat:"Vegetables",emoji:"🥬"},
+  {id:27,name:"Cauliflower",unit:"1 piece",price:40,cat:"Vegetables",emoji:"🥦"},
+  {id:28,name:"Brinjal",unit:"500 g",price:30,cat:"Vegetables",emoji:"🍆"},
+  {id:29,name:"Okra",unit:"500 g",price:35,cat:"Vegetables",emoji:"🥬"},
+  {id:30,name:"Cucumber",unit:"500 g",price:25,cat:"Vegetables",emoji:"🥒"},
+  {id:31,name:"Spinach",unit:"1 bunch",price:20,cat:"Vegetables",emoji:"🥬"},
+  {id:32,name:"Drumsticks",unit:"250 g",price:30,cat:"Vegetables",emoji:"🌿"},
+  {id:33,name:"Lemon",unit:"4 pieces",price:20,cat:"Vegetables",emoji:"🍋"},
+  {id:34,name:"Ginger",unit:"100 g",price:20,cat:"Vegetables",emoji:"🫚"},
+  {id:35,name:"Garlic",unit:"250 g",price:40,cat:"Vegetables",emoji:"🧄"},
+
+  {id:36,name:"Bananas",unit:"6 pieces",price:40,cat:"Fruits",emoji:"🍌",img:photo.banana},
+  {id:37,name:"Apples",unit:"1 kg",price:180,cat:"Fruits",emoji:"🍎",img:photo.apple},
+  {id:38,name:"Oranges",unit:"1 kg",price:100,cat:"Fruits",emoji:"🍊"},
+  {id:39,name:"Sweet Lime",unit:"1 kg",price:90,cat:"Fruits",emoji:"🍈"},
+  {id:40,name:"Papaya",unit:"1 piece",price:60,cat:"Fruits",emoji:"🍈"},
+  {id:41,name:"Watermelon",unit:"1 piece",price:80,cat:"Fruits",emoji:"🍉"},
+  {id:42,name:"Grapes",unit:"500 g",price:80,cat:"Fruits",emoji:"🍇"},
+  {id:43,name:"Guava",unit:"500 g",price:50,cat:"Fruits",emoji:"🍐"},
+
+  {id:44,name:"Milk",unit:"500 ml",price:32,cat:"Dairy & Eggs",emoji:"🥛",img:photo.milk},
+  {id:45,name:"Curd",unit:"500 g",price:40,cat:"Dairy & Eggs",emoji:"🥣",img:photo.curd},
+  {id:46,name:"Butter",unit:"100 g",price:60,cat:"Dairy & Eggs",emoji:"🧈"},
+  {id:47,name:"Paneer",unit:"200 g",price:90,cat:"Dairy & Eggs",emoji:"🧀"},
+  {id:48,name:"Eggs",unit:"6 pieces",price:42,cat:"Dairy & Eggs",emoji:"🥚",img:photo.eggs},
+  {id:49,name:"Bread",unit:"1 loaf",price:40,cat:"Dairy & Eggs",emoji:"🍞",img:photo.bread},
+  {id:50,name:"Cheese Slices",unit:"100 g",price:75,cat:"Dairy & Eggs",emoji:"🧀"},
+
+  {id:51,name:"Biscuits",unit:"1 pack",price:20,cat:"Snacks",emoji:"🍪",img:photo.biscuits},
+  {id:52,name:"Potato Chips",unit:"1 pack",price:20,cat:"Snacks",emoji:"🍟",img:photo.chips},
+  {id:53,name:"Mixture",unit:"200 g",price:40,cat:"Snacks",emoji:"🥨"},
+  {id:54,name:"Murukulu",unit:"200 g",price:45,cat:"Snacks",emoji:"🥨"},
+  {id:55,name:"Chocolate",unit:"1 piece",price:20,cat:"Snacks",emoji:"🍫"},
+  {id:56,name:"Instant Noodles",unit:"1 pack",price:15,cat:"Snacks",emoji:"🍜"},
+  {id:57,name:"Popcorn",unit:"1 pack",price:25,cat:"Snacks",emoji:"🍿"},
+  {id:58,name:"Cake",unit:"1 piece",price:30,cat:"Snacks",emoji:"🍰"},
+
+  {id:59,name:"Bath Soap",unit:"1 bar",price:35,cat:"Personal Care",emoji:"🧼",img:photo.soap},
+  {id:60,name:"Toothpaste",unit:"1 tube",price:65,cat:"Personal Care",emoji:"🪥"},
+  {id:61,name:"Shampoo",unit:"180 ml",price:120,cat:"Personal Care",emoji:"🧴",img:photo.shampoo},
+  {id:62,name:"Hair Oil",unit:"100 ml",price:55,cat:"Personal Care",emoji:"🧴"},
+  {id:63,name:"Toothbrush",unit:"1 piece",price:25,cat:"Personal Care",emoji:"🪥"},
+  {id:64,name:"Face Wash",unit:"1 tube",price:90,cat:"Personal Care",emoji:"🧴"},
+  {id:65,name:"Laundry Soap",unit:"1 bar",price:25,cat:"Personal Care",emoji:"🧼"},
+
+  {id:66,name:"Washing Powder",unit:"1 kg",price:90,cat:"Household",emoji:"🫧"},
+  {id:67,name:"Dishwash Bar",unit:"1 bar",price:25,cat:"Household",emoji:"🧽"},
+  {id:68,name:"Floor Cleaner",unit:"500 ml",price:85,cat:"Household",emoji:"🧹"},
+  {id:69,name:"Garbage Bags",unit:"1 pack",price:50,cat:"Household",emoji:"🗑️"},
+  {id:70,name:"Matches",unit:"1 box",price:2,cat:"Household",emoji:"🔥"},
+  {id:71,name:"Candles",unit:"1 pack",price:25,cat:"Household",emoji:"🕯️"},
+  {id:72,name:"Mosquito Repellent",unit:"1 pack",price:90,cat:"Household",emoji:"🦟"},
+  {id:73,name:"Tissue Paper",unit:"1 pack",price:35,cat:"Household",emoji:"🧻"},
+
+  {id:74,name:"Notebook",unit:"1 book",price:40,cat:"Stationery",emoji:"📓",img:photo.notebook},
+  {id:75,name:"Pen",unit:"1 piece",price:10,cat:"Stationery",emoji:"🖊️"},
+  {id:76,name:"Pencil",unit:"1 piece",price:5,cat:"Stationery",emoji:"✏️"},
+  {id:77,name:"Eraser",unit:"1 piece",price:5,cat:"Stationery",emoji:"🧽"},
+  {id:78,name:"School Kit",unit:"1 set",price:100,cat:"Stationery",emoji:"🎒"},
+  {id:79,name:"Drawing Book",unit:"1 book",price:45,cat:"Stationery",emoji:"🎨"},
+
+  {id:80,name:"Bottled Water",unit:"1 litre",price:20,cat:"Drinks",emoji:"💧",img:photo.water},
+  {id:81,name:"Soft Drink",unit:"750 ml",price:45,cat:"Drinks",emoji:"🥤"},
+  {id:82,name:"Fruit Juice",unit:"1 pack",price:30,cat:"Drinks",emoji:"🧃"},
+  {id:83,name:"Coconut Water",unit:"1 bottle",price:40,cat:"Drinks",emoji:"🥥"}
+];
+
+let activeCategory = "All";
+let selectedVillage = villages[0];
+let cart = {};
+let orders = readJSON("ve_orders",[]);
+
+function readJSON(key,fallback){
+  try{
+    const data=JSON.parse(localStorage.getItem(key));
+    return data ?? fallback;
+  }catch(e){return fallback}
+}
+function money(n){return "₹"+Number(n).toFixed(2)}
+function saveOrders(){localStorage.setItem("ve_orders",JSON.stringify(orders))}
+
+function init(){
+  document.getElementById("villageRow").innerHTML=villages.map(v=>
+    `<button class="village-chip ${v===selectedVillage?"active":""}" onclick="selectVillage(${JSON.stringify(v)})">${v}</button>`
+  ).join("");
+
+  document.getElementById("checkoutVillage").innerHTML=villages.map(v=>
+    `<option value="${v}">${v}</option>`
+  ).join("");
+  document.getElementById("checkoutVillage").value=selectedVillage;
+
+  renderCategories();
+  renderProducts();
+  renderCartSummary();
+
+  setTimeout(()=>{
+    document.getElementById("introScreen")?.classList.add("hide");
+  },2500);
+}
+
+function selectVillage(v){
+  selectedVillage=v;
+  document.querySelectorAll(".village-chip").forEach(b=>{
+    b.classList.toggle("active",b.textContent===v);
+  });
+  document.getElementById("checkoutVillage").value=v;
+}
+
+function renderCategories(){
+  document.getElementById("categoryRow").innerHTML=categories.map(c=>
+    `<button class="category ${activeCategory===c.name?"active":""}" onclick="chooseCategory(${JSON.stringify(c.name)})">
+      <span class="icon">${c.icon}</span><small>${c.name}</small>
+    </button>`
+  ).join("");
+}
+
+function chooseCategory(c){
+  activeCategory=c;
+  renderCategories();
+  renderProducts();
+}
+
+function renderProducts(){
+  const query=document.getElementById("searchInput").value.trim().toLowerCase();
+  const list=products.filter(p=>
+    (activeCategory==="All"||p.cat===activeCategory)&&
+    (p.name.toLowerCase().includes(query)||p.cat.toLowerCase().includes(query))
+  );
+  document.getElementById("productCount").textContent=list.length+" items";
+
+  if(!list.length){
+    document.getElementById("productGrid").innerHTML='<div class="empty">No products found. Try another search.</div>';
+    return;
+  }
+
+  document.getElementById("productGrid").innerHTML=list.map(p=>{
+    const count=cart[p.id]||0;
+    const imageHTML=p.img
+      ? `<img src="${p.img}" alt="${p.name}" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"><div class="fallback">${p.emoji}</div>`
+      : `<div class="fallback" style="display:flex">${p.emoji}</div>`;
+    return `<article class="product">
+      <div class="product-photo">${imageHTML}</div>
+      <div class="product-info">
+        <div class="product-name">${p.name}</div>
+        <div class="product-unit">${p.unit}</div>
+        <div class="product-bottom">
+          <span class="price">${money(p.price)}</span>
+          <button class="add-btn" onclick="addToCart(${p.id})">${count?"+ "+count+" · Add":"＋ Add"}</button>
+        </div>
+      </div>
+    </article>`;
+  }).join("");
+}
+
+function addToCart(id){
+  cart[id]=(cart[id]||0)+1;
+  renderProducts();
+  renderCartSummary();
+}
+function changeQty(id,delta){
+  cart[id]=(cart[id]||0)+delta;
+  if(cart[id]<=0)delete cart[id];
+  renderProducts();
+  renderCartSummary();
+  renderCartItems();
+}
+function cartCount(){return Object.values(cart).reduce((a,b)=>a+b,0)}
+function cartTotal(){return products.reduce((sum,p)=>sum+p.price*(cart[p.id]||0),0)}
+
+function renderCartSummary(){
+  const count=cartCount(),total=cartTotal();
+  document.getElementById("cartCount").textContent=count;
+  document.getElementById("headCount").textContent=count;
+  document.getElementById("cartTotal").textContent=money(total);
+}
+
+function openCart(){
+  document.getElementById("cartOverlay").classList.add("show");
+  renderCartItems();
+}
+function closeCart(){document.getElementById("cartOverlay").classList.remove("show")}
+function outsideClose(e){if(e.target.id==="cartOverlay")closeCart()}
+
+function renderCartItems(){
+  const list=products.filter(p=>cart[p.id]);
+  const target=document.getElementById("cartItems");
+  if(!list.length){
+    target.innerHTML='<div class="empty">Your cart is empty. Add some products first! 🛒</div>';
+    return;
+  }
+  target.innerHTML=list.map(p=>`
+    <div class="cart-line">
+      <div><strong>${p.name}</strong><br><small>${money(p.price)} · ${p.unit}</small></div>
+      <div class="qty">
+        <button onclick="changeQty(${p.id},-1)">−</button>
+        <strong>${cart[p.id]}</strong>
+        <button onclick="changeQty(${p.id},1)">+</button>
+      </div>
+      <strong>${money(p.price*cart[p.id])}</strong>
+    </div>
+  `).join("")+`<div class="section-title"><strong>Product total</strong><strong>${money(cartTotal())}</strong></div>`;
+}
+
+function placeOrder(){
+  if(!cartCount()){
+    alert("Your cart is empty. Please add products first.");
+    return;
+  }
+  const name=document.getElementById("customerName").value.trim();
+  const phone=document.getElementById("customerPhone").value.trim();
+  const address=document.getElementById("customerAddress").value.trim();
+  const village=document.getElementById("checkoutVillage").value;
+  const payment=document.getElementById("paymentMethod").value;
+
+  if(!name||!phone||!address){
+    alert("Please enter your name, phone number and full address.");
+    return;
+  }
+  if(!/^[0-9+\-\s]{10,16}$/.test(phone)){
+    alert("Please enter a valid phone number.");
+    return;
+  }
+
+  const items=products.filter(p=>cart[p.id]).map(p=>({
+    id:p.id,name:p.name,unit:p.unit,price:p.price,quantity:cart[p.id]
+  }));
+  const total=items.reduce((sum,p)=>sum+p.price*p.quantity,0);
+  const order={
+    id:"VE"+Date.now().toString().slice(-8),
+    date:new Date().toLocaleString(),
+    name,phone,address,village,payment,items,total,status:"Pending"
+  };
+
+  let message=`🏡 *VillageExpress Order*\n`;
+  message+=`Order ID: ${order.id}\n`;
+  message+=`Name: ${name}\nPhone: ${phone}\nVillage: ${village}\nAddress: ${address}\n\n`;
+  message+="*Products:*\n";
+  items.forEach(p=>{
+    message+=`• ${p.name} (${p.unit}) x ${p.quantity} = ${money(p.price*p.quantity)}\n`;
+  });
+  message+=`\n*Product total: ${money(total)}*\nPayment: ${payment}\n`;
+  message+="\nPlease confirm availability and delivery charges.";
+
+  // Save a local copy on this device.
+  orders.unshift(order);
+  saveOrders();
+
+  if(WHATSAPP_NUMBER==="91XXXXXXXXXX"){
+    alert("Your order is ready, but the WhatsApp number has not been configured yet. We saved a demo record in this browser. Add your real business number in the code before taking customer orders.");
+    closeCart();
+    return;
+  }
+
+  const url="https://wa.me/"+WHATSAPP_NUMBER+"?text="+encodeURIComponent(message);
+  window.open(url,"_blank");
+
+  cart={};
+  renderProducts();
+  renderCartSummary();
+  closeCart();
+}
+
+function adminLogin(){
+  const password=document.getElementById("adminPassword").value;
+  if(password!==DEMO_ADMIN_PASSWORD){
+    alert("Incorrect demo password.");
+    return;
+  }
+  document.getElementById("adminPanel").hidden=false;
+  renderAdminOrders();
+}
+function adminLogout(){
+  document.getElementById("adminPanel").hidden=true;
+  document.getElementById("adminPassword").value="";
+}
+function renderAdminOrders(){
+  const target=document.getElementById("adminOrders");
+  if(!orders.length){
+    target.textContent="No orders saved in this browser yet.";
+    return;
+  }
+  target.innerHTML=orders.map(o=>`
+    <div style="border-bottom:1px solid #ddd;padding:12px 0">
+      <strong>${o.id}</strong> — ${o.status}<br>
+      ${o.date}<br>
+      Customer: ${o.name} (${o.phone})<br>
+      Village: ${o.village}<br>
+      Total: ${money(o.total)}<br>
+      ${o.items.map(i=>`${i.name} × ${i.quantity}`).join(", ")}
+      <br><button class="secondary" onclick="changeOrderStatus('${o.id}')">Change status</button>
+    </div>
+  `).join("");
+}
+function changeOrderStatus(id){
+  const order=orders.find(o=>o.id===id);
+  if(!order)return;
+  const status=prompt("Enter status: Pending, Accepted, Preparing, Out for delivery, Delivered, Cancelled",order.status);
+  if(status&&status.trim()){
+    order.status=status.trim();
+    saveOrders();
+    renderAdminOrders();
+  }
+}
+function exportOrders(){
+  const blob=new Blob([JSON.stringify(orders,null,2)],{type:"application/json"});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement("a");
+  a.href=url;a.download="villageexpress-orders.json";a.click();
+  URL.revokeObjectURL(url);
+}
+
+init();
+</script>
+</body>
+</html>
