@@ -1,65 +1,288 @@
 
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="theme-color" content="#087443">
-<title>VillageExpress | Local Delivery</title>
+<title>VillageExpress | Village Delivery</title>
+
 <style>
-:root{--green:#087443;--dark:#075832;--bg:#f4f8f5;--text:#18251d;--muted:#66756a;--red:#c62828}
+:root{
+ --green:#087443;
+ --dark:#075832;
+ --bg:#f4f8f5;
+ --text:#18251d;
+ --muted:#66756a;
+ --red:#c62828;
+}
 *{box-sizing:border-box}
-body{margin:0;font-family:Arial,sans-serif;background:var(--bg);color:var(--text)}
+body{
+ margin:0;
+ font-family:Arial,sans-serif;
+ background:var(--bg);
+ color:var(--text);
+}
 button,input,select,textarea{font:inherit}
-button{cursor:pointer;border:0;border-radius:10px;padding:12px;background:var(--green);color:white;font-weight:bold}
+button{
+ cursor:pointer;
+ border:0;
+ border-radius:10px;
+ padding:12px;
+ background:var(--green);
+ color:white;
+ font-weight:bold;
+}
 button:disabled{opacity:.5;cursor:not-allowed}
-header{background:var(--green);color:white;padding:18px 15px}
-.head{max-width:1000px;margin:auto;display:flex;justify-content:space-between;align-items:center;gap:10px}
+
+/* STARTING ANIMATION */
+#splash{
+ position:fixed;
+ inset:0;
+ z-index:99999;
+ display:flex;
+ flex-direction:column;
+ align-items:center;
+ justify-content:center;
+ background:linear-gradient(145deg,#064d2c,#087443,#12a65e);
+ color:white;
+ transition:opacity .65s ease,visibility .65s ease;
+ overflow:hidden;
+}
+#splash.hide{
+ opacity:0;
+ visibility:hidden;
+ pointer-events:none;
+}
+.splash-circle{
+ position:absolute;
+ width:260px;
+ height:260px;
+ border:1px solid #ffffff25;
+ border-radius:50%;
+ animation:circlePulse 2s infinite alternate;
+}
+.splash-content{
+ position:relative;
+ text-align:center;
+ padding:20px;
+}
+.splash-logo{
+ font-size:76px;
+ animation:truckBounce .65s ease-in-out infinite alternate;
+}
+.splash-title{
+ font-size:34px;
+ font-weight:900;
+ margin-top:12px;
+ animation:fadeUp .8s ease both;
+}
+.splash-title span{color:#d6ff92}
+.splash-tagline{
+ font-size:14px;
+ margin-top:10px;
+}
+.loading-track{
+ width:190px;
+ height:5px;
+ margin:28px auto 0;
+ border-radius:20px;
+ overflow:hidden;
+ background:#ffffff55;
+}
+.loading-bar{
+ width:40%;
+ height:100%;
+ border-radius:20px;
+ background:#fff;
+ animation:loading 1.4s ease-in-out infinite;
+}
+#splash p{font-size:12px;opacity:.9}
+@keyframes truckBounce{
+ from{transform:translateY(0) rotate(-3deg)}
+ to{transform:translateY(-12px) rotate(3deg)}
+}
+@keyframes fadeUp{
+ from{opacity:0;transform:translateY(15px)}
+ to{opacity:1;transform:translateY(0)}
+}
+@keyframes loading{
+ from{transform:translateX(-110%)}
+ to{transform:translateX(350%)}
+}
+@keyframes circlePulse{
+ from{transform:scale(.8);opacity:.25}
+ to{transform:scale(1.2);opacity:.8}
+}
+@media(prefers-reduced-motion:reduce){
+ #splash *{animation:none!important}
+ #splash{transition:none}
+}
+
+/* MAIN WEBSITE */
+header{
+ background:var(--green);
+ color:white;
+ padding:18px 15px;
+}
+.head{
+ max-width:1000px;
+ margin:auto;
+ display:flex;
+ justify-content:space-between;
+ align-items:center;
+ gap:10px;
+}
 .logo{font-size:23px;font-weight:800}
 .tag{font-size:12px;margin-top:5px}
 .head button{background:white;color:var(--green)}
 main{max-width:1000px;margin:auto;padding:15px}
-.hero{background:#e0f3e5;padding:20px;border-radius:16px;margin-bottom:16px}
+.hero{
+ background:#e0f3e5;
+ padding:20px;
+ border-radius:16px;
+ margin-bottom:16px;
+}
 .hero h1{font-size:25px;margin:0 0 8px}
 .hero p{line-height:1.5;margin:0}
 .notice{font-size:12px;color:var(--muted);margin-top:9px}
-input,select,textarea{width:100%;padding:12px;border:1px solid #d3ded5;border-radius:10px;background:white;color:var(--text)}
-label{display:block;font-weight:bold;font-size:13px;margin:12px 0 6px}
-.filters{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin:14px 0}
-.section-title{display:flex;justify-content:space-between;align-items:center;gap:10px}
+input,select,textarea{
+ width:100%;
+ padding:12px;
+ border:1px solid #d3ded5;
+ border-radius:10px;
+ background:white;
+ color:var(--text);
+}
+label{
+ display:block;
+ font-weight:bold;
+ font-size:13px;
+ margin:12px 0 6px;
+}
+.filters{
+ display:grid;
+ grid-template-columns:1fr 1fr;
+ gap:9px;
+ margin:14px 0;
+}
+.section-title{
+ display:flex;
+ justify-content:space-between;
+ align-items:center;
+ gap:10px;
+}
 h2{font-size:20px}
-.products{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
-.card{background:white;border:1px solid #e3eae4;border-radius:14px;overflow:hidden;min-width:0}
-.product-icon{height:105px;display:flex;align-items:center;justify-content:center;background:#eaf5ec;font-size:52px}
+.products{
+ display:grid;
+ grid-template-columns:repeat(2,minmax(0,1fr));
+ gap:12px;
+}
+.card{
+ background:white;
+ border:1px solid #e3eae4;
+ border-radius:14px;
+ overflow:hidden;
+ min-width:0;
+}
+.product-icon{
+ height:105px;
+ display:flex;
+ align-items:center;
+ justify-content:center;
+ background:#eaf5ec;
+ font-size:52px;
+}
 .card-body{padding:11px}
 .card h3{font-size:15px;margin:0 0 6px}
 .small{font-size:12px;color:var(--muted)}
 .price{font-weight:800;color:var(--green);margin:9px 0}
 .add{width:100%;padding:10px}
-.panel{background:white;border:1px solid #e0e8e1;border-radius:14px;padding:15px;margin-top:18px}
-.cart-line{display:grid;grid-template-columns:1fr auto;gap:10px;padding:12px 0;border-bottom:1px solid #edf0ed}
+.panel{
+ background:white;
+ border:1px solid #e0e8e1;
+ border-radius:14px;
+ padding:15px;
+ margin-top:18px;
+}
+.cart-line{
+ display:grid;
+ grid-template-columns:1fr auto;
+ gap:10px;
+ padding:12px 0;
+ border-bottom:1px solid #edf0ed;
+}
 .qty{display:flex;align-items:center;gap:8px;margin-top:7px}
 .qty button{padding:5px 10px}
 .remove{background:#fce8e8;color:var(--red)}
-.total-line{display:flex;justify-content:space-between;gap:10px;padding:7px 0}
-.grand{font-size:19px;font-weight:bold;border-top:1px solid #ddd;margin-top:7px;padding-top:12px}
+.total-line{
+ display:flex;
+ justify-content:space-between;
+ gap:10px;
+ padding:7px 0;
+}
+.grand{
+ font-size:19px;
+ font-weight:bold;
+ border-top:1px solid #ddd;
+ margin-top:7px;
+ padding-top:12px;
+}
 .primary{width:100%;margin-top:12px}
 .secondary{background:#e5f2e8;color:var(--dark)}
 .hidden{display:none!important}
-.status{padding:10px;border-radius:9px;background:#fff3d7;font-size:13px;line-height:1.5;margin-top:10px}
-.order-card{border:1px solid #ddd;padding:12px;border-radius:10px;margin:12px 0;overflow-wrap:anywhere}
-footer{text-align:center;padding:24px 10px;color:var(--muted);font-size:12px}
+.status{
+ padding:10px;
+ border-radius:9px;
+ background:#fff3d7;
+ font-size:13px;
+ line-height:1.5;
+ margin-top:10px;
+ overflow-wrap:anywhere;
+}
+.order-card{
+ border:1px solid #ddd;
+ padding:12px;
+ border-radius:10px;
+ margin:12px 0;
+ overflow-wrap:anywhere;
+}
+footer{
+ text-align:center;
+ padding:24px 10px;
+ color:var(--muted);
+ font-size:12px;
+}
 hr{border:0;border-top:1px solid #e1e8e2;margin:15px 0}
-@media(min-width:650px){.products{grid-template-columns:repeat(4,minmax(0,1fr))}.filters{grid-template-columns:2fr 1fr 1fr}.product-icon{height:130px}}
+@media(min-width:650px){
+ .products{grid-template-columns:repeat(4,minmax(0,1fr))}
+ .filters{grid-template-columns:2fr 1fr 1fr}
+ .product-icon{height:130px}
+}
 </style>
 </head>
+
 <body>
+
+<!-- ANIMATED SPLASH SCREEN -->
+<div id="splash">
+ <div class="splash-circle"></div>
+ <div class="splash-content">
+  <div class="splash-logo">🚚</div>
+  <div class="splash-title">Village<span>Express</span></div>
+  <div class="splash-tagline">Your village. Your shops. At your doorstep.</div>
+  <div class="loading-track">
+   <div class="loading-bar"></div>
+  </div>
+  <p>Preparing your village store...</p>
+ </div>
+</div>
+
 <header>
  <div class="head">
   <div>
    <div class="logo">🚚 VillageExpress</div>
-   <div class="tag">Your village. Your shops. At your doorstep.</div>
+   <div class="tag">Your village delivery service</div>
   </div>
   <button onclick="scrollToCart()">🛒 Cart <span id="cartCount">0</span></button>
  </div>
@@ -68,8 +291,8 @@ hr{border:0;border-top:1px solid #e1e8e2;margin:15px 0}
 <main>
  <section class="hero">
   <h1>Shop local, delivered locally!</h1>
-  <p>Browse everyday essentials from your phone. Select your village, add products to your cart, and place your order.</p>
-  <div class="notice">Demo catalogue: prices and product availability must be confirmed with the shop.</div>
+  <p>Order everyday essentials from your phone and support your local shops.</p>
+  <div class="notice">Demo catalogue: confirm product prices and availability before accepting orders.</div>
  </section>
 
  <section id="shopSection">
@@ -77,6 +300,7 @@ hr{border:0;border-top:1px solid #e1e8e2;margin:15px 0}
    <h2>Our Products</h2>
    <span class="small" id="productCount"></span>
   </div>
+
   <div class="filters">
    <input id="search" placeholder="Search products..." oninput="renderProducts()">
    <select id="category" onchange="renderProducts()">
@@ -94,6 +318,7 @@ hr{border:0;border-top:1px solid #e1e8e2;margin:15px 0}
     <option value="name">Name: A to Z</option>
    </select>
   </div>
+
   <div class="products" id="products"></div>
  </section>
 
@@ -105,12 +330,14 @@ hr{border:0;border-top:1px solid #e1e8e2;margin:15px 0}
 
   <hr>
   <h2>Delivery Details</h2>
+
   <form id="checkoutForm">
    <label for="customer">Full name *</label>
    <input id="customer" required maxlength="80" autocomplete="name" placeholder="Enter your name">
 
    <label for="phone">Mobile number *</label>
-   <input id="phone" type="tel" required inputmode="numeric" pattern="[0-9]{10}" maxlength="10" placeholder="10-digit mobile number">
+   <input id="phone" type="tel" required inputmode="numeric"
+    pattern="[0-9]{10}" maxlength="10" placeholder="10-digit mobile number">
 
    <label for="village">Choose village *</label>
    <select id="village" required>
@@ -123,10 +350,12 @@ hr{border:0;border-top:1px solid #e1e8e2;margin:15px 0}
    </select>
 
    <label for="address">House number and full delivery address *</label>
-   <textarea id="address" required maxlength="500" rows="3" placeholder="House number, street, landmark"></textarea>
+   <textarea id="address" required maxlength="500" rows="3"
+    placeholder="House number, street, landmark"></textarea>
 
    <label for="notes">Additional instructions (optional)</label>
-   <textarea id="notes" maxlength="300" rows="2" placeholder="Delivery instructions"></textarea>
+   <textarea id="notes" maxlength="300" rows="2"
+    placeholder="Delivery instructions"></textarea>
 
    <label for="payment">Payment preference</label>
    <select id="payment">
@@ -137,18 +366,29 @@ hr{border:0;border-top:1px solid #e1e8e2;margin:15px 0}
    <button type="submit" class="primary">Place Order via WhatsApp</button>
    <div id="checkoutMessage" class="status hidden" role="status"></div>
   </form>
-  <p class="notice">Submitting saves a demo order in this browser. WhatsApp sending requires a configured business number and your confirmation inside WhatsApp.</p>
+
+  <p class="notice">
+   WhatsApp requires a configured business number and the customer must press Send.
+  </p>
  </section>
 
  <section class="panel">
   <h2>📍 Delivery Information</h2>
-  <p class="small">Delivery available in Seethanagaram, Lankuru, Kondepudi, Raghudevapuram and Vangalapudi.</p>
-  <p class="small">Demo delivery fee: ₹20 per order. Confirm service availability and the final fee before accepting an order.</p>
+  <p class="small">
+   Service villages: Seethanagaram, Lankuru, Kondepudi,
+   Raghudevapuram and Vangalapudi.
+  </p>
+  <p class="small">
+   Demo delivery fee: ₹20 per order. Confirm the actual fee before accepting an order.
+  </p>
  </section>
 
  <section class="panel" id="adminLogin">
   <h2>🔐 Demo Admin</h2>
-  <p class="small">This demo dashboard only shows orders saved on this device. It is not a secure production admin system.</p>
+  <p class="small">
+   This demo dashboard only shows orders saved in this browser.
+   It is not a secure production admin system.
+  </p>
   <label for="adminPassword">Demo password</label>
   <input id="adminPassword" type="password" placeholder="Enter demo password">
   <button class="primary" onclick="loginAdmin()">Open Demo Dashboard</button>
@@ -163,20 +403,34 @@ hr{border:0;border-top:1px solid #e1e8e2;margin:15px 0}
   <div id="adminOrders"></div>
   <button class="primary" onclick="exportCSV()">Download Orders CSV</button>
   <button class="secondary primary" onclick="clearDemoOrders()">Clear All Demo Orders</button>
-  <p class="notice">Order data stays in this browser's storage. Other customers' orders will not appear here without a shared backend.</p>
+  <p class="notice">
+   Orders from other phones will not appear here without a shared backend.
+  </p>
  </section>
 </main>
 
-<footer>© <span id="year"></span> VillageExpress · Supporting local businesses</footer>
+<footer>
+ © <span id="year"></span> VillageExpress · Supporting local businesses
+</footer>
 
 <script>
 "use strict";
 
-// Replace with your business WhatsApp number in international format.
-// Example format: 91 followed by your 10-digit number, without + or spaces.
+/* CONFIGURATION */
+
+// Replace Xs with your business WhatsApp number.
+// Example format: 91 followed by your 10-digit number.
+// Use digits only, without + or spaces.
 const WHATSAPP_NUMBER = "91XXXXXXXXXX";
+
+// Demo delivery charge in rupees.
 const DELIVERY_FEE = 20;
-const ADMIN_PASSWORD = "change-me-123"; // Demo only; not secure for production.
+
+// Demo password only. Not secure for a real business.
+const ADMIN_PASSWORD = "change-me-123";
+
+const CART_KEY = "villageexpress_cart_v1";
+const ORDERS_KEY = "villageexpress_orders_v1";
 
 const PRODUCTS = [
  {id:1,name:"Rice (1 kg)",category:"Groceries",price:60,icon:"🍚"},
@@ -195,40 +449,61 @@ const PRODUCTS = [
  {id:14,name:"Washing Powder (500 g)",category:"Household",price:55,icon:"🧺"}
 ];
 
-const CART_KEY = "villageexpress_cart_v1";
-const ORDERS_KEY = "villageexpress_orders_v1";
-let cart = readStorage(CART_KEY, {});
+let cart = readStorage(CART_KEY,{});
 let isAdmin = false;
 
-function readStorage(key, fallback) {
+/* STARTING ANIMATION */
+
+function startSplash() {
+ const splash = document.getElementById("splash");
+
+ // Show the animation for about 2.2 seconds.
+ setTimeout(function() {
+  if (splash) splash.classList.add("hide");
+
+  setTimeout(function() {
+   if (splash) splash.remove();
+  },700);
+ },2200);
+}
+
+/* STORAGE */
+
+function readStorage(key,fallback) {
  try {
   const value = localStorage.getItem(key);
   return value ? JSON.parse(value) : fallback;
- } catch (error) {
+ } catch(error) {
   return fallback;
  }
 }
 
-function saveStorage(key, value) {
+function saveStorage(key,value) {
  try {
-  localStorage.setItem(key, JSON.stringify(value));
+  localStorage.setItem(key,JSON.stringify(value));
   return true;
- } catch (error) {
-  alert("Browser storage is unavailable or full. Your changes may not be saved.");
+ } catch(error) {
+  alert("Browser storage is unavailable or full. Changes may not be saved.");
   return false;
  }
 }
+
+/* PRODUCTS AND CART */
 
 function money(value) {
  return "₹" + Number(value).toFixed(2);
 }
 
 function cartCount() {
- return Object.values(cart).reduce((sum, qty) => sum + qty, 0);
+ return Object.values(cart).reduce(function(sum,qty) {
+  return sum + (Number(qty)||0);
+ },0);
 }
 
 function subtotal() {
- return PRODUCTS.reduce((sum, p) => sum + p.price * (Number(cart[p.id]) || 0), 0);
+ return PRODUCTS.reduce(function(sum,p) {
+  return sum + p.price * (Number(cart[p.id])||0);
+ },0);
 }
 
 function renderProducts() {
@@ -236,98 +511,116 @@ function renderProducts() {
  const category = document.getElementById("category").value;
  const sort = document.getElementById("sort").value;
 
- let list = PRODUCTS.filter(p =>
-  p.name.toLowerCase().includes(query) &&
-  (category === "All" || p.category === category)
- );
+ let list = PRODUCTS.filter(function(p) {
+  return p.name.toLowerCase().includes(query) &&
+   (category==="All" || p.category===category);
+ });
 
- if (sort === "low") list.sort((a,b) => a.price-b.price);
- if (sort === "high") list.sort((a,b) => b.price-a.price);
- if (sort === "name") list.sort((a,b) => a.name.localeCompare(b.name));
+ if(sort==="low") list.sort((a,b)=>a.price-b.price);
+ if(sort==="high") list.sort((a,b)=>b.price-a.price);
+ if(sort==="name") list.sort((a,b)=>a.name.localeCompare(b.name));
 
- document.getElementById("productCount").textContent = list.length + " items";
- const container = document.getElementById("products");
+ document.getElementById("productCount").textContent=list.length+" items";
 
- if (!list.length) {
-  container.innerHTML = "<p>No products found. Try another search.</p>";
+ const container=document.getElementById("products");
+
+ if(!list.length) {
+  container.innerHTML="<p>No products found. Try another search.</p>";
   return;
  }
 
- container.innerHTML = list.map(p => `
-  <article class="card">
-   <div class="product-icon" aria-hidden="true">${p.icon}</div>
-   <div class="card-body">
-    <h3>${p.name}</h3>
-    <div class="small">${p.category}</div>
-    <div class="price">${money(p.price)}</div>
-    <button class="add" onclick="addToCart(${p.id})">Add to Cart</button>
-   </div>
-  </article>
- `).join("");
+ container.innerHTML=list.map(function(p) {
+  return `
+   <article class="card">
+    <div class="product-icon" aria-hidden="true">${p.icon}</div>
+    <div class="card-body">
+     <h3>${p.name}</h3>
+     <div class="small">${p.category}</div>
+     <div class="price">${money(p.price)}</div>
+     <button class="add" onclick="addToCart(${p.id})">Add to Cart</button>
+    </div>
+   </article>
+  `;
+ }).join("");
 }
 
 function addToCart(id) {
- cart[id] = (Number(cart[id]) || 0) + 1;
- saveStorage(CART_KEY, cart);
+ cart[id]=(Number(cart[id])||0)+1;
+ saveStorage(CART_KEY,cart);
  renderCart();
 }
 
-function changeQty(id, delta) {
- const next = (Number(cart[id]) || 0) + delta;
- if (next <= 0) delete cart[id];
- else cart[id] = next;
- saveStorage(CART_KEY, cart);
+function changeQty(id,delta) {
+ const next=(Number(cart[id])||0)+delta;
+
+ if(next<=0) delete cart[id];
+ else cart[id]=next;
+
+ saveStorage(CART_KEY,cart);
  renderCart();
 }
 
 function clearCart() {
- if (!cartCount()) return;
- if (!confirm("Remove all products from your cart?")) return;
- cart = {};
- saveStorage(CART_KEY, cart);
+ if(!cartCount()) return;
+
+ if(!confirm("Remove all products from your cart?")) return;
+
+ cart={};
+ saveStorage(CART_KEY,cart);
  renderCart();
 }
 
 function scrollToCart() {
- document.getElementById("cartSection").scrollIntoView({behavior:"smooth"});
+ document.getElementById("cartSection").scrollIntoView({
+  behavior:"smooth"
+ });
 }
 
 function renderCart() {
- document.getElementById("cartCount").textContent = cartCount();
- const items = PRODUCTS.filter(p => Number(cart[p.id]) > 0);
- const container = document.getElementById("cartItems");
+ document.getElementById("cartCount").textContent=cartCount();
 
- if (!items.length) {
-  container.innerHTML = '<p class="small">Your cart is empty. Add products to get started.</p>';
+ const items=PRODUCTS.filter(function(p) {
+  return Number(cart[p.id])>0;
+ });
+
+ const container=document.getElementById("cartItems");
+
+ if(!items.length) {
+  container.innerHTML='<p class="small">Your cart is empty. Add products to get started.</p>';
  } else {
-  container.innerHTML = items.map(p => `
-   <div class="cart-line">
-    <div>
-     <strong>${p.icon} ${p.name}</strong>
-     <div class="small">${money(p.price)} each</div>
-     <div class="qty">
-      <button aria-label="Decrease quantity" onclick="changeQty(${p.id},-1)">−</button>
-      <span>${Number(cart[p.id])}</span>
-      <button aria-label="Increase quantity" onclick="changeQty(${p.id},1)">+</button>
+  container.innerHTML=items.map(function(p) {
+   return `
+    <div class="cart-line">
+     <div>
+      <strong>${p.icon} ${p.name}</strong>
+      <div class="small">${money(p.price)} each</div>
+      <div class="qty">
+       <button aria-label="Decrease quantity" onclick="changeQty(${p.id},-1)">−</button>
+       <span>${Number(cart[p.id])}</span>
+       <button aria-label="Increase quantity" onclick="changeQty(${p.id},1)">+</button>
+      </div>
      </div>
+     <strong>${money(p.price*Number(cart[p.id]))}</strong>
     </div>
-    <strong>${money(p.price * Number(cart[p.id]))}</strong>
-   </div>
-  `).join("");
+   `;
+  }).join("");
  }
 
- const sub = subtotal();
- const fee = cartCount() ? DELIVERY_FEE : 0;
- document.getElementById("cartTotals").innerHTML = `
+ const sub=subtotal();
+ const fee=cartCount()?DELIVERY_FEE:0;
+
+ document.getElementById("cartTotals").innerHTML=`
   <div class="total-line"><span>Subtotal</span><strong>${money(sub)}</strong></div>
   <div class="total-line"><span>Demo delivery fee</span><strong>${money(fee)}</strong></div>
   <div class="total-line grand"><span>Total</span><strong>${money(sub+fee)}</strong></div>
  `;
 }
 
-function showMessage(id, message) {
- const el = document.getElementById(id);
- el.textContent = message;
+/* CHECKOUT */
+
+function showMessage(id,message) {
+ const el=document.getElementById(id);
+ el.textContent=message;
  el.classList.remove("hidden");
 }
 
@@ -335,191 +628,249 @@ function hideMessage(id) {
  document.getElementById(id).classList.add("hidden");
 }
 
-document.getElementById("checkoutForm").addEventListener("submit", function(event) {
+document.getElementById("checkoutForm").addEventListener("submit",function(event) {
  event.preventDefault();
  hideMessage("checkoutMessage");
 
- if (!cartCount()) {
-  showMessage("checkoutMessage", "Your cart is empty. Please add products first.");
+ if(!cartCount()) {
+  showMessage("checkoutMessage","Your cart is empty. Add products first.");
   return;
  }
 
- if (!this.reportValidity()) return;
+ if(!this.reportValidity()) return;
 
- const phone = document.getElementById("phone").value.trim();
- if (!/^[0-9]{10}$/.test(phone)) {
-  showMessage("checkoutMessage", "Enter a valid 10-digit mobile number.");
+ const phone=document.getElementById("phone").value.trim();
+
+ if(!/^[0-9]{10}$/.test(phone)) {
+  showMessage("checkoutMessage","Enter a valid 10-digit mobile number.");
   return;
  }
 
- const sub = subtotal();
- if (sub <= 0) {
-  showMessage("checkoutMessage", "Please add a valid product to your cart.");
+ const sub=subtotal();
+
+ if(sub<=0) {
+  showMessage("checkoutMessage","Please add a valid product.");
   return;
  }
 
- const order = {
-  id: "VE-" + Date.now().toString().slice(-9),
-  createdAt: new Date().toISOString(),
-  customer: document.getElementById("customer").value.trim(),
-  phone: phone,
-  village: document.getElementById("village").value,
-  address: document.getElementById("address").value.trim(),
-  notes: document.getElementById("notes").value.trim(),
-  payment: document.getElementById("payment").value,
-  items: PRODUCTS.filter(p => Number(cart[p.id]) > 0).map(p => ({
-   name:p.name, price:p.price, quantity:Number(cart[p.id])
-  })),
+ const order={
+  id:"VE-"+Date.now().toString().slice(-9),
+  createdAt:new Date().toISOString(),
+  customer:document.getElementById("customer").value.trim(),
+  phone:phone,
+  village:document.getElementById("village").value,
+  address:document.getElementById("address").value.trim(),
+  notes:document.getElementById("notes").value.trim(),
+  payment:document.getElementById("payment").value,
+  items:PRODUCTS.filter(function(p) {
+   return Number(cart[p.id])>0;
+  }).map(function(p) {
+   return {
+    name:p.name,
+    price:p.price,
+    quantity:Number(cart[p.id])
+   };
+  }),
   subtotal:sub,
   deliveryFee:DELIVERY_FEE,
   total:sub+DELIVERY_FEE,
   status:"Pending"
  };
 
- const orders = readStorage(ORDERS_KEY, []);
+ const orders=readStorage(ORDERS_KEY,[]);
  orders.unshift(order);
 
- // Save before opening WhatsApp so the demo order is retained.
- if (!saveStorage(ORDERS_KEY, orders)) return;
+ // Save a demo copy on this device.
+ if(!saveStorage(ORDERS_KEY,orders)) return;
 
- const message = [
+ const message=[
   "NEW VILLAGEEXPRESS ORDER",
-  "Order ID: " + order.id,
-  "Customer: " + order.customer,
-  "Phone: " + order.phone,
-  "Village: " + order.village,
-  "Address: " + order.address,
+  "Order ID: "+order.id,
+  "Customer: "+order.customer,
+  "Phone: "+order.phone,
+  "Village: "+order.village,
+  "Address: "+order.address,
   "",
   "ITEMS:",
-  ...order.items.map(item => item.name + " x " + item.quantity + " = " + money(item.price * item.quantity)),
+  ...order.items.map(function(item) {
+   return item.name+" x "+item.quantity+" = "+money(item.price*item.quantity);
+  }),
   "",
-  "Subtotal: " + money(order.subtotal),
-  "Delivery: " + money(order.deliveryFee),
-  "TOTAL: " + money(order.total),
-  "Payment preference: " + order.payment,
-  "Instructions: " + (order.notes || "None"),
+  "Subtotal: "+money(order.subtotal),
+  "Delivery: "+money(order.deliveryFee),
+  "TOTAL: "+money(order.total),
+  "Payment preference: "+order.payment,
+  "Instructions: "+(order.notes||"None"),
   "",
-  "Please confirm availability and delivery."
+  "Please confirm product availability and delivery."
  ].join("\n");
 
- if (!/^[0-9]{10,15}$/.test(WHATSAPP_NUMBER) || WHATSAPP_NUMBER.includes("X")) {
+ if(!/^[0-9]{10,15}$/.test(WHATSAPP_NUMBER)||WHATSAPP_NUMBER.includes("X")) {
   showMessage("checkoutMessage",
-   "Demo order " + order.id + " saved on this device. WhatsApp is not configured yet. Replace WHATSAPP_NUMBER in the code with your business number, then test again. This order has NOT been sent to the business.");
+   "Demo order "+order.id+" saved in this browser only. WhatsApp is not configured. Replace WHATSAPP_NUMBER in the code. This order has NOT been sent to the business.");
   renderAdmin();
   return;
  }
 
- const url = "https://wa.me/" + WHATSAPP_NUMBER + "?text=" + encodeURIComponent(message);
+ const url="https://wa.me/"+WHATSAPP_NUMBER+"?text="+encodeURIComponent(message);
 
  showMessage("checkoutMessage",
-  "Order " + order.id + " is saved in this browser. WhatsApp will open next. Press Send in WhatsApp to send it to the business.");
+  "Order "+order.id+" saved locally. WhatsApp will open; press Send there to send your order.");
 
- // User initiated this navigation by submitting the checkout form.
- window.location.href = url;
+ // Navigate to WhatsApp after customer submits checkout.
+ window.location.href=url;
 });
+
+/* DEMO ADMIN */
 
 function loginAdmin() {
  hideMessage("loginMessage");
- const password = document.getElementById("adminPassword").value;
 
- if (password !== ADMIN_PASSWORD) {
-  showMessage("loginMessage", "Incorrect demo password.");
+ const password=document.getElementById("adminPassword").value;
+
+ if(password!==ADMIN_PASSWORD) {
+  showMessage("loginMessage","Incorrect demo password.");
   return;
  }
 
- isAdmin = true;
+ isAdmin=true;
  document.getElementById("adminPanel").classList.remove("hidden");
  renderAdmin();
 }
 
 function logoutAdmin() {
- isAdmin = false;
+ isAdmin=false;
  document.getElementById("adminPanel").classList.add("hidden");
- document.getElementById("adminPassword").value = "";
+ document.getElementById("adminPassword").value="";
 }
 
 function escapeHTML(value) {
- return String(value ?? "").replace(/[&<>"']/g, char => ({
-  "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
- }[char]));
+ return String(value??"").replace(/[&<>"']/g,function(char) {
+  return {
+   "&":"&amp;",
+   "<":"&lt;",
+   ">":"&gt;",
+   '"':"&quot;",
+   "'":"&#39;"
+  }[char];
+ });
 }
 
 function renderAdmin() {
- if (!isAdmin) return;
- const orders = readStorage(ORDERS_KEY, []);
- const container = document.getElementById("adminOrders");
+ if(!isAdmin) return;
 
- if (!orders.length) {
-  container.innerHTML = "<p>No demo orders saved on this device.</p>";
+ const orders=readStorage(ORDERS_KEY,[]);
+ const container=document.getElementById("adminOrders");
+
+ if(!orders.length) {
+  container.innerHTML="<p>No demo orders saved on this device.</p>";
   return;
  }
 
- container.innerHTML = orders.map(o => `
-  <article class="order-card">
-   <strong>${escapeHTML(o.id)}</strong>
-   <p class="small">${escapeHTML(new Date(o.createdAt).toLocaleString())}</p>
-   <p><strong>${escapeHTML(o.customer)}</strong> · ${escapeHTML(o.phone)}</p>
-   <p>${escapeHTML(o.village)} — ${escapeHTML(o.address)}</p>
-   <p>${o.items.map(i => escapeHTML(i.name)+" × "+Number(i.quantity)).join("<br>")}</p>
-   <p><strong>Total: ${money(o.total)}</strong></p>
-   <label>Order status</label>
-   <select onchange="updateStatus('${escapeHTML(o.id)}',this.value)">
-    ${["Pending","Confirmed","Preparing","Out for delivery","Delivered","Cancelled"].map(s =>
-     `<option ${o.status===s?"selected":""}>${s}</option>`).join("")}
-   </select>
-  </article>
- `).join("");
+ container.innerHTML=orders.map(function(o) {
+  return `
+   <article class="order-card">
+    <strong>${escapeHTML(o.id)}</strong>
+    <p class="small">${escapeHTML(new Date(o.createdAt).toLocaleString())}</p>
+    <p><strong>${escapeHTML(o.customer)}</strong> · ${escapeHTML(o.phone)}</p>
+    <p>${escapeHTML(o.village)} — ${escapeHTML(o.address)}</p>
+    <p>${o.items.map(function(i) {
+     return escapeHTML(i.name)+" × "+Number(i.quantity);
+    }).join("<br>")}</p>
+    <p><strong>Total: ${money(o.total)}</strong></p>
+    <label>Order status</label>
+    <select onchange="updateStatus('${escapeHTML(o.id)}',this.value)">
+     ${["Pending","Confirmed","Preparing","Out for delivery","Delivered","Cancelled"].map(function(s) {
+      return `<option ${o.status===s?"selected":""}>${s}</option>`;
+     }).join("")}
+    </select>
+   </article>
+  `;
+ }).join("");
 }
 
-function updateStatus(id, status) {
- const allowed = ["Pending","Confirmed","Preparing","Out for delivery","Delivered","Cancelled"];
- if (!allowed.includes(status)) return;
- const orders = readStorage(ORDERS_KEY, []);
- const order = orders.find(o => o.id === id);
- if (!order) return;
- order.status = status;
- saveStorage(ORDERS_KEY, orders);
+function updateStatus(id,status) {
+ const allowed=[
+  "Pending","Confirmed","Preparing",
+  "Out for delivery","Delivered","Cancelled"
+ ];
+
+ if(!allowed.includes(status)) return;
+
+ const orders=readStorage(ORDERS_KEY,[]);
+ const order=orders.find(function(o) {
+  return o.id===id;
+ });
+
+ if(!order) return;
+
+ order.status=status;
+ saveStorage(ORDERS_KEY,orders);
  renderAdmin();
 }
 
 function exportCSV() {
- const orders = readStorage(ORDERS_KEY, []);
- if (!orders.length) {
+ const orders=readStorage(ORDERS_KEY,[]);
+
+ if(!orders.length) {
   alert("There are no orders to export.");
   return;
  }
 
- const rows = [["Order ID","Date","Customer","Phone","Village","Address","Items","Subtotal","Delivery","Total","Payment","Status"]];
- orders.forEach(o => rows.push([
-  o.id,o.createdAt,o.customer,o.phone,o.village,o.address,
-  o.items.map(i => i.name+" x "+i.quantity).join("; "),
-  o.subtotal,o.deliveryFee,o.total,o.payment,o.status
- ]));
+ const rows=[[
+  "Order ID","Date","Customer","Phone","Village",
+  "Address","Items","Subtotal","Delivery","Total",
+  "Payment","Status"
+ ]];
 
- const csv = rows.map(row => row.map(value =>
-  '"' + String(value ?? "").replace(/"/g,'""') + '"'
- ).join(",")).join("\r\n");
+ orders.forEach(function(o) {
+  rows.push([
+   o.id,o.createdAt,o.customer,o.phone,o.village,o.address,
+   o.items.map(function(i) {
+    return i.name+" x "+i.quantity;
+   }).join("; "),
+   o.subtotal,o.deliveryFee,o.total,o.payment,o.status
+  ]);
+ });
 
- const blob = new Blob(["\uFEFF"+csv], {type:"text/csv;charset=utf-8;"});
- const url = URL.createObjectURL(blob);
- const a = document.createElement("a");
- a.href = url;
- a.download = "VillageExpress-orders.csv";
+ const csv=rows.map(function(row) {
+  return row.map(function(value) {
+   return '"'+String(value??"").replace(/"/g,'""')+'"';
+  }).join(",");
+ }).join("\r\n");
+
+ const blob=new Blob(["\uFEFF"+csv],{
+  type:"text/csv;charset=utf-8;"
+ });
+
+ const url=URL.createObjectURL(blob);
+ const a=document.createElement("a");
+
+ a.href=url;
+ a.download="VillageExpress-orders.csv";
  document.body.appendChild(a);
  a.click();
  a.remove();
- setTimeout(() => URL.revokeObjectURL(url), 1000);
+
+ setTimeout(function() {
+  URL.revokeObjectURL(url);
+ },1000);
 }
 
 function clearDemoOrders() {
- if (!confirm("Permanently clear all demo orders stored in this browser?")) return;
- saveStorage(ORDERS_KEY, []);
+ if(!confirm("Permanently clear all demo orders stored in this browser?")) return;
+
+ saveStorage(ORDERS_KEY,[]);
  renderAdmin();
 }
 
-document.getElementById("year").textContent = new Date().getFullYear();
+/* START THE WEBSITE */
+
+document.getElementById("year").textContent=new Date().getFullYear();
 renderProducts();
 renderCart();
+startSplash();
 </script>
+
 </body>
 </html>
